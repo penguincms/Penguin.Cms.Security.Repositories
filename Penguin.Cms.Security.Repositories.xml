@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Penguin.Cms.Security.Repositories</name>
+    </assembly>
+    <members>
+        <member name="T:Penguin.Cms.Security.Repositories.GroupRepository">
+            <summary>
+            An IRepository implementation for basic group actions
+            </summary>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.GroupRepository.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{Penguin.Cms.Security.Group},Penguin.Messaging.Core.MessageBus)">
+            <summary>
+            Constructs a new instance of this repository
+            </summary>
+            <param name="dbContext">An IPersistence context implementation for accessing groups</param>
+            <param name="messageBus">An optional Message bus for persistence messages</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.GroupRepository.CreateIfNotExists(System.String,System.String)">
+            <summary>
+            If a group with a matching name does not exist, it creates it. If it does, it returns the existing instance
+            </summary>
+            <param name="groupName">The name of the group to get/set</param>
+            <param name="groupDescription">The description to set if the group does not exist</param>
+            <returns>If a group with a matching name does not exist, it creates it. If it does, it returns the existing instance</returns>
+        </member>
+        <member name="T:Penguin.Cms.Security.Repositories.GroupRoleRepository`1">
+            <summary>
+            A base implementation of a repository for both groups and roles
+            </summary>
+            <typeparam name="T">Any grouprole type</typeparam>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.GroupRoleRepository`1.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{`0},Penguin.Messaging.Core.MessageBus)">
+            <summary>
+            Constructs a new instance of this repository
+            </summary>
+            <param name="dbContext">A persistence context for either a group, or a role (or any other derived type)</param>
+            <param name="messageBus">An optional message bus for persistence messages</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.GroupRoleRepository`1.GetByName(System.String)">
+            <summary>
+            Gets a group or role by name
+            </summary>
+            <param name="Name">The name to check for</param>
+            <returns>The group/role or null</returns>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.GroupRoleRepository`1.GetDefaults">
+            <summary>
+            Gets any groups/roles that are set to be assigned to all new users
+            </summary>
+            <returns>Any groups/roles that are set to be assigned to all new users</returns>
+        </member>
+        <member name="T:Penguin.Cms.Security.Repositories.ProfileRepository">
+            <summary>
+            An IRepository implementation for accessing user profiles
+            </summary>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.ProfileRepository.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{Penguin.Cms.Security.Profile},Penguin.Messaging.Core.MessageBus)">
+            <summary>
+            Constructs a new instance of this repository
+            </summary>
+            <param name="dbContext">An IPersistenceContext used to access Profiles</param>
+            <param name="messageBus">An optional message bus for sending persistence messages</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.ProfileRepository.GetByLogin(System.String)">
+            <summary>
+            Returns the user profile for a user with the requested login
+            </summary>
+            <param name="login">The login of the user that owns the profile</param>
+            <returns>The users profile</returns>
+        </member>
+        <member name="T:Penguin.Cms.Security.Repositories.RoleRepository">
+            <summary>
+            An IRepository implementation for Roles
+            </summary>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.RoleRepository.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{Penguin.Cms.Security.Role},Penguin.Messaging.Core.MessageBus)">
+            <summary>
+            Constructs a new instance of this repository
+            </summary>
+            <param name="dbContext">An IPersistence context for accessing roles</param>
+            <param name="messageBus">An optional message bus for sending persistence messages</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.RoleRepository.CreateIfNotExists(System.String,System.String,Penguin.Cms.Security.SecurityGroup.SecurityGroupSource)">
+            <summary>
+            If a role with a matching name exists, it is returned. If not, it is created and then returned
+            </summary>
+            <param name="roleName">The name of the role to get/set</param>
+            <param name="roleDescription">A description to give the role if it does not exist</param>
+            <param name="source">The data source of the role being created</param>
+            <returns>The role if it exists, or a new role if it doesn't</returns>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.RoleRepository.Exists(System.String)">
+            <summary>
+            Checks to see if the role exists in the persistence context
+            </summary>
+            <param name="name">The name of the role to check for</param>
+            <returns>If the role exists</returns>
+        </member>
+        <member name="T:Penguin.Cms.Security.Repositories.SecurityGroupRepository">
+            <summary>
+            An agnostic implementation of a repository for all security group types
+            </summary>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.SecurityGroupRepository.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{Penguin.Cms.Security.SecurityGroup},Penguin.Messaging.Core.MessageBus)">
+            <summary>
+            Constructs a new instance of this repository type
+            </summary>
+            <param name="dbContext">The Persistence context designed to handle all security groups</param>
+            <param name="messageBus">An optional message bus for sending persistence messages</param>
+        </member>
+        <member name="T:Penguin.Cms.Security.Repositories.SecurityGroupRepository`1">
+            <summary>
+            Constructs a new instance of this repository type
+            </summary>
+            <typeparam name="T">Any type inheriting from security group</typeparam>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.SecurityGroupRepository`1.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{`0},Penguin.Messaging.Core.MessageBus)">
+            <summary>
+            Constructs a new instance of this repository type
+            </summary>
+            <param name="dbContext">The Persistence context for this particular security group kind</param>
+            <param name="messageBus">An optional message bus for sending persistence messages</param>
+        </member>
+        <member name="T:Penguin.Cms.Security.Repositories.UserRepository">
+            <summary>
+            A default implementation of an IRepository for users containing helpful methods
+            </summary>
+        </member>
+        <member name="P:Penguin.Cms.Security.Repositories.UserRepository.GroupRepository">
+            <summary>
+            Group repository for assigning default groups
+            </summary>
+        </member>
+        <member name="P:Penguin.Cms.Security.Repositories.UserRepository.RoleRepository">
+            <summary>
+            Role repository for assigning default roles
+            </summary>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{Penguin.Cms.Security.User},Penguin.Cms.Security.Repositories.RoleRepository,Penguin.Cms.Security.Repositories.GroupRepository,Penguin.Messaging.Core.MessageBus)">
+            <summary>
+            Constructs a new instance of this repository
+            </summary>
+            <param name="context">An IPersistence context implemementation for Users</param>
+            <param name="roleRepository">A role repository for getting default roles</param>
+            <param name="groupRepository">A group repository for getting default groups</param>
+            <param name="messageBus">An optional message bus for persistence messages</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Add(Penguin.Cms.Security.User[])">
+            <summary>
+            Adds a new user and assigns default groups/roles
+            </summary>
+            <param name="o">Users to add</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.AddOrUpdate(Penguin.Cms.Security.User[])">
+            <summary>
+            Adds or updates a new user and assigns default groups/roles
+            </summary>
+            <param name="o">Users to add</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Create(Penguin.Messaging.Persistence.Messages.Creating{Penguin.Cms.Security.User})">
+            <summary>
+            Message handler for creating a user, user to ensure that all defaults are properly assigned
+            </summary>
+            <param name="create">Persistence message containing the user being created</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Get(System.Int32)">
+            <summary>
+            Gets a user by ID, or returns a Guest user instance if the Id is 0 or doesn't exist
+            </summary>
+            <param name="userId">The user to get</param>
+            <returns> a user by ID, or returns a Guest user instance if the Id is 0 or doesn't exist</returns>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Update(Penguin.Cms.Security.User[])">
+            <summary>
+            Updates an existing user and adds default roles
+            </summary>
+            <param name="o">User to update</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.GetByLoginPassword(System.String,System.String)">
+            <summary>
+            Gets a user matching the supplied username and password
+            </summary>
+            <param name="login">The login to check for</param>
+            <param name="password">The password the user must have</param>
+            <returns>A user if the login information is correct, or null if not</returns>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.GetByLogin(System.String)">
+            <summary>
+            Gets a user with a matching login
+            </summary>
+            <param name="login">The login to get</param>
+            <returns>A user with a  matching login, or null if none</returns>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.GetByEmail(System.String)">
+            <summary>
+            Gets a user with a matching email
+            </summary>
+            <param name="email">The email to check for</param>
+            <returns>A user with a matching email, or null if none</returns>
+        </member>
+    </members>
+</doc>
