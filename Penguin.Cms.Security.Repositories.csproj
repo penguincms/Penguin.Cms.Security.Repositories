@@ -7,12 +7,14 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>http://www.penguinms.com/Nuget</PackageProjectUrl>
     <PackageIconUrl>http://www.penguinms.com/client/images/pg.png</PackageIconUrl>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Description>None Available</Description>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Penguin.Cms.Repositories" Version="1.1.0" />
+    <PackageReference Include="Penguin.Cms.Repositories" Version="1.1.1" />
     <PackageReference Include="Penguin.Cms.Security" Version="1.0.9" />
     <PackageReference Include="Penguin.Messaging.Core" Version="2.0.9" />
   </ItemGroup>
