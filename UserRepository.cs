@@ -1,11 +1,8 @@
-﻿using Penguin.Cms.Security;
-using System.Linq;
+﻿using Penguin.Cms.Security.Extensions;
 using Penguin.Messaging.Core;
 using Penguin.Messaging.Persistence.Messages;
-using Penguin.Cms.Security.Extensions;
 using Penguin.Persistence.Abstractions.Interfaces;
-using User = Penguin.Cms.Security.User;
-
+using System.Linq;
 
 namespace Penguin.Cms.Security.Repositories
 {
@@ -14,8 +11,6 @@ namespace Penguin.Cms.Security.Repositories
     /// </summary>
     public class UserRepository : SecurityGroupRepository<User>
     {
-        #region Properties
-
         /// <summary>
         /// Group repository for assigning default groups
         /// </summary>
@@ -25,10 +20,6 @@ namespace Penguin.Cms.Security.Repositories
         /// Role repository for assigning default roles
         /// </summary>
         protected RoleRepository RoleRepository { get; set; }
-
-        #endregion Properties
-
-        #region Constructors
 
         /// <summary>
         /// Constructs a new instance of this repository
@@ -42,10 +33,6 @@ namespace Penguin.Cms.Security.Repositories
             this.RoleRepository = roleRepository;
             this.GroupRepository = groupRepository;
         }
-
-        #endregion Constructors
-
-        #region Methods
 
         /// <summary>
         /// Adds a new user and assigns default groups/roles
@@ -131,6 +118,34 @@ namespace Penguin.Cms.Security.Repositories
         }
 
         /// <summary>
+        /// Gets a user with a matching email
+        /// </summary>
+        /// <param name="email">The email to check for</param>
+        /// <returns>A user with a matching email, or null if none</returns>
+        public User GetByEmail(string email) => this.FirstOrDefault(u => u.Email == email);
+
+        /// <summary>
+        /// Gets a user with a matching login
+        /// </summary>
+        /// <param name="login">The login to get</param>
+        /// <returns>A user with a  matching login, or null if none</returns>
+        public User GetByLogin(string login)
+        {
+            return this.FirstOrDefault(u => u.ExternalId == login);
+        }
+
+        /// <summary>
+        /// Gets a user matching the supplied username and password
+        /// </summary>
+        /// <param name="login">The login to check for</param>
+        /// <param name="password">The password the user must have</param>
+        /// <returns>A user if the login information is correct, or null if not</returns>
+        public User GetByLoginPassword(string login, string password)
+        {
+            return this.FirstOrDefault(u => u.ExternalId == login && u.Password == password);
+        }
+
+        /// <summary>
         /// Updates an existing user and adds default roles
         /// </summary>
         /// <param name="o">User to update</param>
@@ -150,35 +165,5 @@ namespace Penguin.Cms.Security.Repositories
                 }
             }
         }
-
-        /// <summary>
-        /// Gets a user matching the supplied username and password
-        /// </summary>
-        /// <param name="login">The login to check for</param>
-        /// <param name="password">The password the user must have</param>
-        /// <returns>A user if the login information is correct, or null if not</returns>
-        public User GetByLoginPassword(string login, string password)
-        {
-            return this.FirstOrDefault(u => u.ExternalId == login && u.Password == password);
-        }
-
-        /// <summary>
-        /// Gets a user with a matching login
-        /// </summary>
-        /// <param name="login">The login to get</param>
-        /// <returns>A user with a  matching login, or null if none</returns>
-        public User GetByLogin(string login)
-        {
-            return this.FirstOrDefault(u => u.ExternalId == login);
-        }
-
-        /// <summary>
-        /// Gets a user with a matching email
-        /// </summary>
-        /// <param name="email">The email to check for</param>
-        /// <returns>A user with a matching email, or null if none</returns>
-        public User GetByEmail(string email) => this.FirstOrDefault(u => u.Email == email);
-
-        #endregion Methods
     }
 }
