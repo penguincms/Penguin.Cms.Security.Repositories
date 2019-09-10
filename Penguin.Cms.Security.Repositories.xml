@@ -171,11 +171,19 @@
             <param name="userId">The user to get</param>
             <returns> a user by ID, or returns a Guest user instance if the Id is 0 or doesn't exist</returns>
         </member>
-        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Update(Penguin.Cms.Security.User[])">
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.GetByEmail(System.String)">
             <summary>
-            Updates an existing user and adds default roles
+            Gets a user with a matching email
             </summary>
-            <param name="o">User to update</param>
+            <param name="email">The email to check for</param>
+            <returns>A user with a matching email, or null if none</returns>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.GetByLogin(System.String)">
+            <summary>
+            Gets a user with a matching login
+            </summary>
+            <param name="login">The login to get</param>
+            <returns>A user with a  matching login, or null if none</returns>
         </member>
         <member name="M:Penguin.Cms.Security.Repositories.UserRepository.GetByLoginPassword(System.String,System.String)">
             <summary>
@@ -185,19 +193,11 @@
             <param name="password">The password the user must have</param>
             <returns>A user if the login information is correct, or null if not</returns>
         </member>
-        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.GetByLogin(System.String)">
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Update(Penguin.Cms.Security.User[])">
             <summary>
-            Gets a user with a matching login
+            Updates an existing user and adds default roles
             </summary>
-            <param name="login">The login to get</param>
-            <returns>A user with a  matching login, or null if none</returns>
-        </member>
-        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.GetByEmail(System.String)">
-            <summary>
-            Gets a user with a matching email
-            </summary>
-            <param name="email">The email to check for</param>
-            <returns>A user with a matching email, or null if none</returns>
+            <param name="o">User to update</param>
         </member>
     </members>
 </doc>
