@@ -2,6 +2,7 @@
 using Penguin.Messaging.Core;
 using Penguin.Messaging.Persistence.Messages;
 using Penguin.Persistence.Abstractions.Interfaces;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace Penguin.Cms.Security.Repositories
@@ -57,22 +58,24 @@ namespace Penguin.Cms.Security.Repositories
         /// <summary>
         /// Message handler for creating a user, user to ensure that all defaults are properly assigned
         /// </summary>
-        /// <param name="create">Persistence message containing the user being created</param>
-        public override void Create(Creating<User> create)
+        /// <param name="createMessage">Persistence message containing the user being created</param>
+        public override void Create(Creating<User> createMessage)
         {
+            Contract.Requires(createMessage != null);
+
             foreach (Role thisRole in this.RoleRepository.GetDefaults())
             {
-                create.Target.Roles.Add(thisRole);
+                createMessage.Target.Roles.Add(thisRole);
             }
 
             foreach (Group thisGroup in this.GroupRepository.GetDefaults())
             {
-                create.Target.Groups.Add(thisGroup);
+                createMessage.Target.Groups.Add(thisGroup);
             }
 
-            create.Target.Enabled = true;
+            createMessage.Target.Enabled = true;
 
-            base.Create(create);
+            base.Create(createMessage);
         }
 
         /// <summary>
@@ -80,7 +83,7 @@ namespace Penguin.Cms.Security.Repositories
         /// </summary>
         /// <param name="userId">The user to get</param>
         /// <returns> a user by ID, or returns a Guest user instance if the Id is 0 or doesn't exist</returns>
-        public override User Get(int userId)
+        public override User Find(int userId)
         {
             if (userId == 0 || !this.Where(u => u._Id == userId).Any())
             {

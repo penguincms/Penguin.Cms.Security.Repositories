@@ -55,7 +55,7 @@
             An IRepository implementation for accessing user profiles
             </summary>
         </member>
-        <member name="M:Penguin.Cms.Security.Repositories.ProfileRepository.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{Penguin.Cms.Security.Profile},Penguin.Messaging.Core.MessageBus)">
+        <member name="M:Penguin.Cms.Security.Repositories.ProfileRepository.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{Penguin.Cms.Security.UserProfile},Penguin.Messaging.Core.MessageBus)">
             <summary>
             Constructs a new instance of this repository
             </summary>
@@ -162,9 +162,9 @@
             <summary>
             Message handler for creating a user, user to ensure that all defaults are properly assigned
             </summary>
-            <param name="create">Persistence message containing the user being created</param>
+            <param name="createMessage">Persistence message containing the user being created</param>
         </member>
-        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Get(System.Int32)">
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Find(System.Int32)">
             <summary>
             Gets a user by ID, or returns a Guest user instance if the Id is 0 or doesn't exist
             </summary>

@@ -8,14 +8,14 @@ namespace Penguin.Cms.Security.Repositories
     /// <summary>
     /// An IRepository implementation for accessing user profiles
     /// </summary>
-    public class ProfileRepository : UserAuditableEntityRepository<Profile>
+    public class ProfileRepository : UserAuditableEntityRepository<UserProfile>
     {
         /// <summary>
         /// Constructs a new instance of this repository
         /// </summary>
         /// <param name="dbContext">An IPersistenceContext used to access Profiles</param>
         /// <param name="messageBus">An optional message bus for sending persistence messages</param>
-        public ProfileRepository(IPersistenceContext<Profile> dbContext, MessageBus messageBus = null) : base(dbContext, messageBus)
+        public ProfileRepository(IPersistenceContext<UserProfile> dbContext, MessageBus messageBus = null) : base(dbContext, messageBus)
         {
         }
 
@@ -24,6 +24,6 @@ namespace Penguin.Cms.Security.Repositories
         /// </summary>
         /// <param name="login">The login of the user that owns the profile</param>
         /// <returns>The users profile</returns>
-        public Profile GetByLogin(string login) => this.Where(u => u.User.ExternalId == login).FirstOrDefault();
+        public UserProfile GetByLogin(string login) => this.Where(u => u.User.ExternalId == login).FirstOrDefault();
     }
 }

@@ -29,14 +29,6 @@ namespace Penguin.Cms.Security.Repositories
     /// <typeparam name="T">Any type inheriting from security group</typeparam>
     public class SecurityGroupRepository<T> : UserAuditableEntityRepository<T> where T : SecurityGroup
     {
-        private static AsyncLocal<Dictionary<Guid, SecurityGroup>> CachedGroupsHolder { get; set; } = new AsyncLocal<Dictionary<Guid, SecurityGroup>>()
-        {
-            Value = new Dictionary<Guid, SecurityGroup>()
-        };
-
-        private Dictionary<Type, IEntityRepository> _securityRepositories { get; set; } = new Dictionary<Type, IEntityRepository>();
-
-        private List<Type> _securityTypes { get; set; } = new List<Type>();
 
         /// <summary>
         /// Constructs a new instance of this repository type
