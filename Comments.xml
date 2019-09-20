@@ -158,7 +158,7 @@
             </summary>
             <param name="o">Users to add</param>
         </member>
-        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Create(Penguin.Messaging.Persistence.Messages.Creating{Penguin.Cms.Security.User})">
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.AcceptMessage(Penguin.Messaging.Persistence.Messages.Creating{Penguin.Cms.Security.User})">
             <summary>
             Message handler for creating a user, user to ensure that all defaults are properly assigned
             </summary>

@@ -59,7 +59,7 @@ namespace Penguin.Cms.Security.Repositories
         /// Message handler for creating a user, user to ensure that all defaults are properly assigned
         /// </summary>
         /// <param name="createMessage">Persistence message containing the user being created</param>
-        public override void Create(Creating<User> createMessage)
+        public override void AcceptMessage(Creating<User> createMessage)
         {
             Contract.Requires(createMessage != null);
 
@@ -75,7 +75,7 @@ namespace Penguin.Cms.Security.Repositories
 
             createMessage.Target.Enabled = true;
 
-            base.Create(createMessage);
+            base.AcceptMessage(createMessage);
         }
 
         /// <summary>
