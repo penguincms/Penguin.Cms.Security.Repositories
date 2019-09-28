@@ -146,23 +146,35 @@
             <param name="groupRepository">A group repository for getting default groups</param>
             <param name="messageBus">An optional message bus for persistence messages</param>
         </member>
-        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Add(Penguin.Cms.Security.User[])">
-            <summary>
-            Adds a new user and assigns default groups/roles
-            </summary>
-            <param name="o">Users to add</param>
-        </member>
-        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.AddOrUpdate(Penguin.Cms.Security.User[])">
-            <summary>
-            Adds or updates a new user and assigns default groups/roles
-            </summary>
-            <param name="o">Users to add</param>
-        </member>
         <member name="M:Penguin.Cms.Security.Repositories.UserRepository.AcceptMessage(Penguin.Messaging.Persistence.Messages.Creating{Penguin.Cms.Security.User})">
             <summary>
             Message handler for creating a user, user to ensure that all defaults are properly assigned
             </summary>
             <param name="createMessage">Persistence message containing the user being created</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Add(Penguin.Cms.Security.User)">
+            <summary>
+            Adds a new user and assigns default groups/roles
+            </summary>
+            <param name="o">Users to add</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.AddOrUpdate(Penguin.Cms.Security.User)">
+            <summary>
+            Adds or updates a new user and assigns default groups/roles
+            </summary>
+            <param name="o">Users to add</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.AddOrUpdateRange(System.Collections.Generic.IEnumerable{Penguin.Cms.Security.User})">
+            <summary>
+            Adds or updates a new user and assigns default groups/roles
+            </summary>
+            <param name="o">Users to add</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.AddRange(System.Collections.Generic.IEnumerable{Penguin.Cms.Security.User})">
+            <summary>
+            Adds a new user and assigns default groups/roles
+            </summary>
+            <param name="o">Users to add</param>
         </member>
         <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Find(System.Int32)">
             <summary>
@@ -193,7 +205,13 @@
             <param name="password">The password the user must have</param>
             <returns>A user if the login information is correct, or null if not</returns>
         </member>
-        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Update(Penguin.Cms.Security.User[])">
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Update(Penguin.Cms.Security.User)">
+            <summary>
+            Updates an existing user and adds default roles
+            </summary>
+            <param name="o">User to update</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.UserRepository.UpdateRange(System.Collections.Generic.IEnumerable{Penguin.Cms.Security.User})">
             <summary>
             Updates an existing user and adds default roles
             </summary>

@@ -2,6 +2,7 @@
 using Penguin.Messaging.Core;
 using Penguin.Messaging.Persistence.Messages;
 using Penguin.Persistence.Abstractions.Interfaces;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
@@ -36,26 +37,6 @@ namespace Penguin.Cms.Security.Repositories
         }
 
         /// <summary>
-        /// Adds a new user and assigns default groups/roles
-        /// </summary>
-        /// <param name="o">Users to add</param>
-        public override void Add(params User[] o)
-        {
-            this.AddDefaults(o);
-            base.Add(o);
-        }
-
-        /// <summary>
-        /// Adds or updates a new user and assigns default groups/roles
-        /// </summary>
-        /// <param name="o">Users to add</param>
-        public override void AddOrUpdate(params User[] o)
-        {
-            this.AddDefaults(o);
-            base.AddOrUpdate(o);
-        }
-
-        /// <summary>
         /// Message handler for creating a user, user to ensure that all defaults are properly assigned
         /// </summary>
         /// <param name="createMessage">Persistence message containing the user being created</param>
@@ -76,6 +57,46 @@ namespace Penguin.Cms.Security.Repositories
             createMessage.Target.Enabled = true;
 
             base.AcceptMessage(createMessage);
+        }
+
+        /// <summary>
+        /// Adds a new user and assigns default groups/roles
+        /// </summary>
+        /// <param name="o">Users to add</param>
+        public override void Add(User o)
+        {
+            this.AddDefaults(o);
+            base.Add(o);
+        }
+
+        /// <summary>
+        /// Adds or updates a new user and assigns default groups/roles
+        /// </summary>
+        /// <param name="o">Users to add</param>
+        public override void AddOrUpdate(User o)
+        {
+            this.AddDefaults(o);
+            base.AddOrUpdate(o);
+        }
+
+        /// <summary>
+        /// Adds or updates a new user and assigns default groups/roles
+        /// </summary>
+        /// <param name="o">Users to add</param>
+        public override void AddOrUpdateRange(IEnumerable<User> o)
+        {
+            this.AddDefaults(o);
+            base.AddOrUpdateRange(o);
+        }
+
+        /// <summary>
+        /// Adds a new user and assigns default groups/roles
+        /// </summary>
+        /// <param name="o">Users to add</param>
+        public override void AddRange(IEnumerable<User> o)
+        {
+            this.AddDefaults(o);
+            base.AddRange(o);
         }
 
         /// <summary>
@@ -152,20 +173,35 @@ namespace Penguin.Cms.Security.Repositories
         /// Updates an existing user and adds default roles
         /// </summary>
         /// <param name="o">User to update</param>
-        public override void Update(params User[] o)
+        public override void Update(User o)
         {
             this.AddDefaults(o);
             base.Update(o);
         }
 
-        private void AddDefaults(params User[] o)
+        /// <summary>
+        /// Updates an existing user and adds default roles
+        /// </summary>
+        /// <param name="o">User to update</param>
+        public override void UpdateRange(IEnumerable<User> o)
+        {
+            this.AddDefaults(o);
+            base.UpdateRange(o);
+        }
+
+        private void AddDefaults(IEnumerable<User> o)
         {
             foreach (User entity in o)
             {
-                if (!entity.HasRole(Static.Roles.LoggedIn))
-                {
-                    entity.AddRole(this.RoleRepository.GetByName(Static.Roles.LoggedIn.Name));
-                }
+                AddDefaults(entity);
+            }
+        }
+
+        private void AddDefaults(User entity)
+        {
+            if (!entity.HasRole(Static.Roles.LoggedIn))
+            {
+                entity.AddRole(this.RoleRepository.GetByName(Static.Roles.LoggedIn.Name));
             }
         }
     }
