@@ -85,6 +85,11 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="o">Users to add</param>
         public override void AddOrUpdateRange(IEnumerable<User> o)
         {
+            if (o is null)
+            {
+                throw new System.ArgumentNullException(nameof(o));
+            }
+
             this.AddDefaults(o);
             base.AddOrUpdateRange(o);
         }
@@ -95,6 +100,11 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="o">Users to add</param>
         public override void AddRange(IEnumerable<User> o)
         {
+            if (o is null)
+            {
+                throw new System.ArgumentNullException(nameof(o));
+            }
+
             this.AddDefaults(o);
             base.AddRange(o);
         }
@@ -109,7 +119,7 @@ namespace Penguin.Cms.Security.Repositories
             if (userId == 0 || !this.Where(u => u._Id == userId).Any())
             {
                 //This is dumb. For guest users we have to make sure the Guid matches the DB role guid, so we have to pull it
-                User toReturn = Penguin.Cms.Security.Static.Users.Guest;
+                User toReturn = Users.Guest;
 
                 foreach (Role thisRole in toReturn.Roles.ToList())
                 {
@@ -185,6 +195,11 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="o">User to update</param>
         public override void UpdateRange(IEnumerable<User> o)
         {
+            if (o is null)
+            {
+                throw new System.ArgumentNullException(nameof(o));
+            }
+
             this.AddDefaults(o);
             base.UpdateRange(o);
         }
@@ -199,9 +214,9 @@ namespace Penguin.Cms.Security.Repositories
 
         private void AddDefaults(User entity)
         {
-            if (!entity.HasRole(Static.Roles.LoggedIn))
+            if (!entity.HasRole(Roles.LoggedIn))
             {
-                entity.AddRole(this.RoleRepository.GetByName(Static.Roles.LoggedIn.Name));
+                entity.AddRole(this.RoleRepository.GetByName(Roles.LoggedIn.Name));
             }
         }
     }
