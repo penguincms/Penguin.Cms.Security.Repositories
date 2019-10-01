@@ -2,6 +2,7 @@
 using Penguin.Messaging.Core;
 using Penguin.Messaging.Persistence.Messages;
 using Penguin.Persistence.Abstractions.Interfaces;
+using Penguin.Security.Abstractions.Extensions;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
