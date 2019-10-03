@@ -3,6 +3,7 @@ using Penguin.Messaging.Core;
 using Penguin.Messaging.Persistence.Messages;
 using Penguin.Persistence.Abstractions.Interfaces;
 using Penguin.Security.Abstractions.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -215,9 +216,18 @@ namespace Penguin.Cms.Security.Repositories
 
         private void AddDefaults(User entity)
         {
-            if (!entity.HasRole(Roles.LoggedIn))
+            if (entity.ExternalId != Users.Guest.ExternalId && !entity.HasRole(Roles.LoggedIn))
             {
-                entity.AddRole(this.RoleRepository.GetByName(Roles.LoggedIn.Name));
+                Role LoggedIn = this.RoleRepository.GetByName(Roles.LoggedIn.Name);
+
+                if (LoggedIn is null)
+                {
+                    throw new NullReferenceException($"A role with the name \"{Roles.LoggedIn.Name}\" was not found and can not be added to the requested user {entity.ExternalId}");
+                }
+                else
+                {
+                    entity.AddRole(LoggedIn);
+                }
             }
         }
     }
