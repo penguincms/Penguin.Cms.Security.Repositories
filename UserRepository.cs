@@ -1,4 +1,5 @@
 ﻿using Penguin.Cms.Security.Extensions;
+using Penguin.Messaging.Abstractions.Interfaces;
 using Penguin.Messaging.Core;
 using Penguin.Messaging.Persistence.Messages;
 using Penguin.Persistence.Abstractions.Interfaces;
@@ -13,7 +14,7 @@ namespace Penguin.Cms.Security.Repositories
     /// <summary>
     /// A default implementation of an IRepository for users containing helpful methods
     /// </summary>
-    public class UserRepository : SecurityGroupRepository<User>
+    public class UserRepository : SecurityGroupRepository<User>, IMessageHandler<Creating<User>>
     {
         /// <summary>
         /// Group repository for assigning default groups
@@ -42,7 +43,7 @@ namespace Penguin.Cms.Security.Repositories
         /// Message handler for creating a user, user to ensure that all defaults are properly assigned
         /// </summary>
         /// <param name="createMessage">Persistence message containing the user being created</param>
-        public override void AcceptMessage(Creating<User> createMessage)
+        public void AcceptMessage(Creating<User> createMessage)
         {
             Contract.Requires(createMessage != null);
 
@@ -57,8 +58,6 @@ namespace Penguin.Cms.Security.Repositories
             }
 
             createMessage.Target.Enabled = true;
-
-            base.AcceptMessage(createMessage);
         }
 
         /// <summary>

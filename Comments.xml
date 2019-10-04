@@ -4,6 +4,42 @@
         <name>Penguin.Cms.Security.Repositories</name>
     </assembly>
     <members>
+        <member name="T:Penguin.Cms.Security.Repositories.EntityPermissionsRepository">
+            <summary>
+            A repository for accessing entity permissions
+            </summary>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{Penguin.Cms.Security.Objects.EntityPermissions},Penguin.Messaging.Core.MessageBus)">
+            <summary>
+            Constructs this repository using the given values
+            </summary>
+            <param name="context">The underlying context to use for persistence</param>
+            <param name="messageBus">An optional message bus for event notification</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.GetForEntity(Penguin.Entities.Entity)">
+            <summary>
+            Retrieves the permissions for a single entity
+            </summary>
+            <param name="target">The target entity to retrieve permissions for</param>
+            <returns>The permissions applicable to the entity</returns>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.AddPermission(Penguin.Entities.Entity,Penguin.Cms.Security.SecurityGroup,Penguin.Security.Abstractions.PermissionTypes)">
+            <summary>
+            Adds the specified permissions to the Entity
+            </summary>
+            <param name="target">The entity that the permissions are applied to</param>
+            <param name="securityGroup">The security group being granted the permissions</param>
+            <param name="permissionTypes">The permission types to add</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.AllowsAccessType(Penguin.Entities.Entity,Penguin.Security.Abstractions.Interfaces.IUser,Penguin.Security.Abstractions.PermissionTypes)">
+            <summary>
+            Checks if the given entity allows a given kind of access for the specified user
+            </summary>
+            <param name="target">The entity the user is trying to access</param>
+            <param name="user">The user doing the accessing</param>
+            <param name="permissionTypes">The permission types needed to perform the action</param>
+            <returns>True if the user is allowed to continue</returns>
+        </member>
         <member name="T:Penguin.Cms.Security.Repositories.GroupRepository">
             <summary>
             An IRepository implementation for basic group actions

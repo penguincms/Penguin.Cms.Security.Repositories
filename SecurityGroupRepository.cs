@@ -1,10 +1,6 @@
-﻿using Penguin.Cms.Repositories;
-using Penguin.Messaging.Core;
+﻿using Penguin.Messaging.Core;
 using Penguin.Persistence.Abstractions.Interfaces;
-using Penguin.Persistence.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Threading;
+using Penguin.Persistence.Repositories;
 
 namespace Penguin.Cms.Security.Repositories
 {
@@ -27,7 +23,7 @@ namespace Penguin.Cms.Security.Repositories
     /// Constructs a new instance of this repository type
     /// </summary>
     /// <typeparam name="T">Any type inheriting from security group</typeparam>
-    public class SecurityGroupRepository<T> : UserAuditableEntityRepository<T> where T : SecurityGroup
+    public class SecurityGroupRepository<T> : EntityRepository<T> where T : SecurityGroup
     {
 
         /// <summary>

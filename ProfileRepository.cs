@@ -1,6 +1,6 @@
-﻿using Penguin.Cms.Repositories;
-using Penguin.Messaging.Core;
+﻿using Penguin.Messaging.Core;
 using Penguin.Persistence.Abstractions.Interfaces;
+using Penguin.Persistence.Repositories;
 using System.Linq;
 
 namespace Penguin.Cms.Security.Repositories
@@ -8,7 +8,7 @@ namespace Penguin.Cms.Security.Repositories
     /// <summary>
     /// An IRepository implementation for accessing user profiles
     /// </summary>
-    public class ProfileRepository : UserAuditableEntityRepository<UserProfile>
+    public class ProfileRepository : EntityRepository<UserProfile>
     {
         /// <summary>
         /// Constructs a new instance of this repository
