@@ -23,6 +23,13 @@
             <param name="target">The target entity to retrieve permissions for</param>
             <returns>The permissions applicable to the entity</returns>
         </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.GetForEntity(System.Guid)">
+            <summary>
+            Retrieves the permissions for a single entity
+            </summary>
+            <param name="target">The target entities guid to retrieve permissions for</param>
+            <returns>The permissions applicable to the entity</returns>
+        </member>
         <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.AddPermission(Penguin.Entities.Entity,Penguin.Cms.Security.SecurityGroup,Penguin.Security.Abstractions.PermissionTypes)">
             <summary>
             Adds the specified permissions to the Entity
@@ -30,6 +37,23 @@
             <param name="target">The entity that the permissions are applied to</param>
             <param name="securityGroup">The security group being granted the permissions</param>
             <param name="permissionTypes">The permission types to add</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.AddPermission(System.Guid,Penguin.Cms.Security.SecurityGroup,Penguin.Security.Abstractions.PermissionTypes)">
+            <summary>
+            Adds the specified permissions to the Entity
+            </summary>
+            <param name="target">The entity that the permissions are applied to</param>
+            <param name="securityGroup">The security group being granted the permissions</param>
+            <param name="permissionTypes">The permission types to add</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.AllowsAccessType(System.Guid,Penguin.Security.Abstractions.Interfaces.IUser,Penguin.Security.Abstractions.PermissionTypes)">
+            <summary>
+            Checks if the given entity allows a given kind of access for the specified user
+            </summary>
+            <param name="target">The Guid of the entity that is being accessed</param>
+            <param name="user">The user doing the accessing</param>
+            <param name="permissionTypes">The permission types needed to perform the action</param>
+            <returns>True if the user is allowed to continue</returns>
         </member>
         <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.AllowsAccessType(Penguin.Entities.Entity,Penguin.Security.Abstractions.Interfaces.IUser,Penguin.Security.Abstractions.PermissionTypes)">
             <summary>
@@ -39,6 +63,42 @@
             <param name="user">The user doing the accessing</param>
             <param name="permissionTypes">The permission types needed to perform the action</param>
             <returns>True if the user is allowed to continue</returns>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.Add(Penguin.Cms.Security.Objects.EntityPermissions)">
+            <summary>
+            Adds the whole set of permissions to a new or existing instance of permissions
+            </summary>
+            <param name="o">The new entity permissions</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.AddRange(System.Collections.Generic.IEnumerable{Penguin.Cms.Security.Objects.EntityPermissions})">
+            <summary>
+            Adds the whole set of permissions to a new or existing instance of permissions
+            </summary>
+            <param name="o">The new entity permissions</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.Update(Penguin.Cms.Security.Objects.EntityPermissions)">
+            <summary>
+            Updates any existing entity permissions or adds if they're new
+            </summary>
+            <param name="o">The updated entity permissions</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.UpdateRange(System.Collections.Generic.IEnumerable{Penguin.Cms.Security.Objects.EntityPermissions})">
+            <summary>
+            Updates any existing entity permissions or adds if they're new
+            </summary>
+            <param name="o">The updated entity permissions</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.AddOrUpdate(Penguin.Cms.Security.Objects.EntityPermissions)">
+            <summary>
+            Updates any existing entity permissions or adds if they're new
+            </summary>
+            <param name="o">The updated entity permissions</param>
+        </member>
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.AddOrUpdateRange(System.Collections.Generic.IEnumerable{Penguin.Cms.Security.Objects.EntityPermissions})">
+            <summary>
+            Updates any existing entity permissions or adds if they're new
+            </summary>
+            <param name="o">The updated entity permissions</param>
         </member>
         <member name="T:Penguin.Cms.Security.Repositories.GroupRepository">
             <summary>

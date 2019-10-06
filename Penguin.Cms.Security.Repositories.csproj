@@ -2,7 +2,7 @@
   <Import Project="Penguin.Projects.Shared\Penguin.Projects.Shared.csproj" />
   <PropertyGroup>
     <PackageProjectUrl>https://github.com/penguincms/Penguin.Cms.Security.Repositories</PackageProjectUrl>
-    <Version>3.3.4</Version>
+    <Version>3.3.12</Version>
     <Description>None Available</Description>
   </PropertyGroup>
   <ItemGroup>
