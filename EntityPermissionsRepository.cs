@@ -1,15 +1,13 @@
-﻿using Penguin.Cms.Security.Objects;
-using Penguin.Entities;
+﻿using Penguin.Cms.Entities;
+using Penguin.Cms.Repositories;
 using Penguin.Messaging.Core;
 using Penguin.Persistence.Abstractions.Interfaces;
-using Penguin.Persistence.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 using Penguin.Security.Abstractions;
 using Penguin.Security.Abstractions.Extensions;
 using Penguin.Security.Abstractions.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Penguin.Cms.Security.Repositories
 {
@@ -29,96 +27,6 @@ namespace Penguin.Cms.Security.Repositories
         public EntityPermissionsRepository(IPersistenceContext<EntityPermissions> context, MessageBus messageBus = null) : base(context, messageBus)
         {
         }
-
-        /// <summary>
-        /// Retrieves the permissions for a single entity
-        /// </summary>
-        /// <param name="target">The target entity to retrieve permissions for</param>
-        /// <returns>The permissions applicable to the entity</returns>
-        public EntityPermissions GetForEntity(Entity target) => GetForEntity(target.Guid);
-
-        /// <summary>
-        /// Retrieves the permissions for a single entity
-        /// </summary>
-        /// <param name="target">The target entities guid to retrieve permissions for</param>
-        /// <returns>The permissions applicable to the entity</returns>
-        public EntityPermissions GetForEntity(Guid target)
-        {
-            return this.Where(p => p.EntityGuid == target).SingleOrDefault();
-        }
-
-        /// <summary>
-        /// Adds the specified permissions to the Entity
-        /// </summary>
-        /// <param name="target">The entity that the permissions are applied to</param>
-        /// <param name="securityGroup">The security group being granted the permissions</param>
-        /// <param name="permissionTypes">The permission types to add</param>
-        public void AddPermission(Entity target, SecurityGroup securityGroup, PermissionTypes permissionTypes) => AddPermission(target.Guid, securityGroup, permissionTypes);
-
-        /// <summary>
-        /// Adds the specified permissions to the Entity
-        /// </summary>
-        /// <param name="target">The entity that the permissions are applied to</param>
-        /// <param name="securityGroup">The security group being granted the permissions</param>
-        /// <param name="permissionTypes">The permission types to add</param>
-        public void AddPermission(Guid target, SecurityGroup securityGroup, PermissionTypes permissionTypes)
-        {
-            EntityPermissions existing = this.GetForEntity(target);
-            bool foundPermissions;
-            if (existing is null)
-            {
-                foundPermissions = PermissionsCache.TryGetValue(target, out existing);
-            } else
-            {
-                foundPermissions = true;
-            }
-
-            if (!foundPermissions)
-            {
-                existing = new EntityPermissions()
-                {
-                    EntityGuid = target
-                };
-
-                existing.AddPermission(securityGroup, permissionTypes);
-                this.PermissionsCache.Add(target, existing);
-                base.Add(existing);
-            }
-            else
-            {
-                existing.AddPermission(securityGroup, permissionTypes);
-                base.AddOrUpdate(existing);
-            }
-        }
-
-        /// <summary>
-        /// Checks if the given entity allows a given kind of access for the specified user
-        /// </summary>
-        /// <param name="target">The Guid of the entity that is being accessed</param>
-        /// <param name="user">The user doing the accessing</param>
-        /// <param name="permissionTypes">The permission types needed to perform the action</param>
-        /// <returns>True if the user is allowed to continue</returns>
-        public bool AllowsAccessType(Guid target, IUser user, PermissionTypes permissionTypes)
-        {
-            EntityPermissions existing = this.GetForEntity(target);
-
-            if(existing != null)
-            {
-                return existing.AllowsAccessType(user, permissionTypes);
-            } else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Checks if the given entity allows a given kind of access for the specified user
-        /// </summary>
-        /// <param name="target">The entity the user is trying to access</param>
-        /// <param name="user">The user doing the accessing</param>
-        /// <param name="permissionTypes">The permission types needed to perform the action</param>
-        /// <returns>True if the user is allowed to continue</returns>
-        public bool AllowsAccessType(Entity target, IUser user, PermissionTypes permissionTypes) => this.AllowsAccessType(target.Guid, user, permissionTypes);
 
         /// <summary>
         /// Adds the whole set of permissions to a new or existing instance of permissions
@@ -149,8 +57,63 @@ namespace Penguin.Cms.Security.Repositories
                     this.AddPermission(o.EntityGuid, sg.SecurityGroup, sg.Type);
                 }
             }
+        }
 
+        /// <summary>
+        /// Updates any existing entity permissions or adds if they're new
+        /// </summary>
+        /// <param name="o">The updated entity permissions</param>
+        public override void AddOrUpdate(EntityPermissions o) => Update(o);
 
+        /// <summary>
+        /// Updates any existing entity permissions or adds if they're new
+        /// </summary>
+        /// <param name="o">The updated entity permissions</param>
+        public override void AddOrUpdateRange(IEnumerable<EntityPermissions> o) => UpdateRange(o);
+
+        /// <summary>
+        /// Adds the specified permissions to the Entity
+        /// </summary>
+        /// <param name="target">The entity that the permissions are applied to</param>
+        /// <param name="securityGroup">The security group being granted the permissions</param>
+        /// <param name="permissionTypes">The permission types to add</param>
+        public void AddPermission(Entity target, SecurityGroup securityGroup, PermissionTypes permissionTypes) => AddPermission(target.Guid, securityGroup, permissionTypes);
+
+        /// <summary>
+        /// Adds the specified permissions to the Entity
+        /// </summary>
+        /// <param name="target">The entity that the permissions are applied to</param>
+        /// <param name="securityGroup">The security group being granted the permissions</param>
+        /// <param name="permissionTypes">The permission types to add</param>
+        public void AddPermission(Guid target, SecurityGroup securityGroup, PermissionTypes permissionTypes)
+        {
+            EntityPermissions existing = this.GetForEntity(target);
+            bool foundPermissions;
+            if (existing is null)
+            {
+                foundPermissions = PermissionsCache.TryGetValue(target, out existing);
+            }
+            else
+            {
+                foundPermissions = true;
+            }
+
+            if (!foundPermissions)
+            {
+                existing = new EntityPermissions()
+                {
+                    EntityGuid = target
+                };
+
+                existing.AddPermission(securityGroup, permissionTypes);
+                this.PermissionsCache.Add(target, existing);
+                base.Add(existing);
+            }
+            else
+            {
+                existing.AddPermission(securityGroup, permissionTypes);
+                base.AddOrUpdate(existing);
+            }
         }
 
         /// <summary>
@@ -171,6 +134,53 @@ namespace Penguin.Cms.Security.Repositories
         }
 
         /// <summary>
+        /// Checks if the given entity allows a given kind of access for the specified user
+        /// </summary>
+        /// <param name="target">The Guid of the entity that is being accessed</param>
+        /// <param name="user">The user doing the accessing</param>
+        /// <param name="permissionTypes">The permission types needed to perform the action</param>
+        /// <returns>True if the user is allowed to continue</returns>
+        public bool AllowsAccessType(Guid target, IUser user, PermissionTypes permissionTypes)
+        {
+            EntityPermissions existing = this.GetForEntity(target);
+
+            if (existing != null)
+            {
+                return existing.AllowsAccessType(user, permissionTypes);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the given entity allows a given kind of access for the specified user
+        /// </summary>
+        /// <param name="target">The entity the user is trying to access</param>
+        /// <param name="user">The user doing the accessing</param>
+        /// <param name="permissionTypes">The permission types needed to perform the action</param>
+        /// <returns>True if the user is allowed to continue</returns>
+        public bool AllowsAccessType(Entity target, IUser user, PermissionTypes permissionTypes) => this.AllowsAccessType(target.Guid, user, permissionTypes);
+
+        /// <summary>
+        /// Retrieves the permissions for a single entity
+        /// </summary>
+        /// <param name="target">The target entity to retrieve permissions for</param>
+        /// <returns>The permissions applicable to the entity</returns>
+        public EntityPermissions GetForEntity(Entity target) => GetForEntity(target.Guid);
+
+        /// <summary>
+        /// Retrieves the permissions for a single entity
+        /// </summary>
+        /// <param name="target">The target entities guid to retrieve permissions for</param>
+        /// <returns>The permissions applicable to the entity</returns>
+        public EntityPermissions GetForEntity(Guid target)
+        {
+            return this.Where(p => p.EntityGuid == target).SingleOrDefault();
+        }
+
+        /// <summary>
         /// Updates any existing entity permissions or adds if they're new
         /// </summary>
         /// <param name="o">The updated entity permissions</param>
@@ -188,14 +198,16 @@ namespace Penguin.Cms.Security.Repositories
 
             EntityPermissions existing = this.GetForEntity(o.EntityGuid);
 
-            if(existing is null)
+            if (existing is null)
             {
                 base.Add(this.ShallowClone(o));
-            } else
+            }
+            else
             {
                 existing.Permissions = o.Permissions;
             }
         }
+
         /// <summary>
         /// Updates any existing entity permissions or adds if they're new
         /// </summary>
@@ -212,15 +224,5 @@ namespace Penguin.Cms.Security.Repositories
                 Update(e);
             }
         }
-        /// <summary>
-        /// Updates any existing entity permissions or adds if they're new
-        /// </summary>
-        /// <param name="o">The updated entity permissions</param>
-        public override void AddOrUpdate(EntityPermissions o) => Update(o);
-        /// <summary>
-        /// Updates any existing entity permissions or adds if they're new
-        /// </summary>
-        /// <param name="o">The updated entity permissions</param>
-        public override void AddOrUpdateRange(IEnumerable<EntityPermissions> o) => UpdateRange(o);
     }
 }

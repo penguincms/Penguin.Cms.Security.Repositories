@@ -1,4 +1,6 @@
-﻿using Penguin.Cms.Security.Extensions;
+﻿using Penguin.Cms.Repositories;
+using Penguin.Cms.Security.Constants;
+using Penguin.Cms.Security.Extensions;
 using Penguin.Messaging.Abstractions.Interfaces;
 using Penguin.Messaging.Core;
 using Penguin.Messaging.Persistence.Messages;
@@ -14,17 +16,17 @@ namespace Penguin.Cms.Security.Repositories
     /// <summary>
     /// A default implementation of an IRepository for users containing helpful methods
     /// </summary>
-    public class UserRepository : SecurityGroupRepository<User>, IMessageHandler<Creating<User>>
+    public class UserRepository : EntityRepository<User>, IMessageHandler<Creating<User>>
     {
         /// <summary>
         /// Group repository for assigning default groups
         /// </summary>
-        protected GroupRepository GroupRepository { get; set; }
+        protected IRepository<Group> GroupRepository { get; set; }
 
         /// <summary>
         /// Role repository for assigning default roles
         /// </summary>
-        protected RoleRepository RoleRepository { get; set; }
+        protected IRepository<Role> RoleRepository { get; set; }
 
         /// <summary>
         /// Constructs a new instance of this repository
@@ -33,7 +35,7 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="roleRepository">A role repository for getting default roles</param>
         /// <param name="groupRepository">A group repository for getting default groups</param>
         /// <param name="messageBus">An optional message bus for persistence messages</param>
-        public UserRepository(IPersistenceContext<User> context, RoleRepository roleRepository, GroupRepository groupRepository, MessageBus messageBus = null) : base(context, messageBus)
+        public UserRepository(IPersistenceContext<User> context, IRepository<Role> roleRepository, IRepository<Group> groupRepository, MessageBus messageBus = null) : base(context, messageBus)
         {
             this.RoleRepository = roleRepository;
             this.GroupRepository = groupRepository;
