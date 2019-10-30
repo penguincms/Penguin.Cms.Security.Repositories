@@ -5,12 +5,14 @@
     <Version>3.4.0</Version>
     <Description>None Available</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Penguin.Cms.Security.Repositories</AssemblyName>
+    <RootNamespace>Penguin.Cms.Security.Repositories</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove=".gitmodules" />
-    <PackageReference Include="Penguin.Cms.Security" Version="3.4.1-T9M1HHH" />
-    <PackageReference Include="Penguin.Cms.Repositories" Version="3.0.4-T9M1HHH" />
+    <PackageReference Include="Penguin.Cms.Security" Version="3.4.1-T9M2XAX" />
+    <PackageReference Include="Penguin.Cms.Repositories" Version="3.0.4-T9M2XAX" />
   </ItemGroup>
   <ItemGroup />
 </Project>
