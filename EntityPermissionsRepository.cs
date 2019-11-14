@@ -177,7 +177,40 @@ namespace Penguin.Cms.Security.Repositories
         /// <returns>The permissions applicable to the entity</returns>
         public EntityPermissions GetForEntity(Guid target)
         {
-            return this.Where(p => p.EntityGuid == target).SingleOrDefault();
+            List<EntityPermissions> existing = this.Where(p => p.EntityGuid == target).ToList();
+
+            if (!existing.Any())
+            {
+                return null;
+            }
+
+            EntityPermissions toReturn = existing.FirstOrDefault();
+
+
+            //This is really fucking stupid but theres no time to fix it now
+            if (existing.Count > 1)
+            {
+                using (IWriteContext context = this.WriteContext())
+                {
+                    foreach (EntityPermissions EntityPermissions in existing.Skip(1))
+                    {
+                        EntityPermissions entityPermissions = this.Find(EntityPermissions._Id);
+
+                        List<SecurityGroupPermission> toMove = entityPermissions.Permissions.ToList();
+
+                        entityPermissions.Permissions.Clear();
+
+                        foreach (SecurityGroupPermission sg in toMove)
+                        {
+                            toReturn.AddPermission(sg.SecurityGroup, sg.Type);
+                        }
+
+                        this.Delete(entityPermissions);
+                    }
+                }
+            }
+
+            return toReturn;
         }
 
         /// <summary>
