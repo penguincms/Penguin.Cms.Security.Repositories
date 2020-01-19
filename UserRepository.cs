@@ -1,6 +1,7 @@
 ﻿using Penguin.Cms.Repositories;
 using Penguin.Cms.Security.Constants;
 using Penguin.Cms.Security.Extensions;
+using Penguin.Extensions.Strings.Security;
 using Penguin.Messaging.Abstractions.Interfaces;
 using Penguin.Messaging.Core;
 using Penguin.Messaging.Persistence.Messages;
@@ -179,7 +180,8 @@ namespace Penguin.Cms.Security.Repositories
         /// <returns>A user if the login information is correct, or null if not</returns>
         public User GetByLoginPassword(string login, string password)
         {
-            return this.FirstOrDefault(u => u.ExternalId == login && u.Password == password);
+            string hPass = password.ComputeSha512Hash();
+            return this.FirstOrDefault(u => u.ExternalId == login && u.HashedPassword == hPass);
         }
 
         /// <summary>
