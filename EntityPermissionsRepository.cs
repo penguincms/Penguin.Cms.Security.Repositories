@@ -63,13 +63,19 @@ namespace Penguin.Cms.Security.Repositories
         /// Updates any existing entity permissions or adds if they're new
         /// </summary>
         /// <param name="o">The updated entity permissions</param>
-        public override void AddOrUpdate(EntityPermissions o) => Update(o);
+        public override void AddOrUpdate(EntityPermissions o)
+        {
+            this.Update(o);
+        }
 
         /// <summary>
         /// Updates any existing entity permissions or adds if they're new
         /// </summary>
         /// <param name="o">The updated entity permissions</param>
-        public override void AddOrUpdateRange(IEnumerable<EntityPermissions> o) => UpdateRange(o);
+        public override void AddOrUpdateRange(IEnumerable<EntityPermissions> o)
+        {
+            this.UpdateRange(o);
+        }
 
         /// <summary>
         /// Adds the specified permissions to the Entity
@@ -77,7 +83,10 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="target">The entity that the permissions are applied to</param>
         /// <param name="securityGroup">The security group being granted the permissions</param>
         /// <param name="permissionTypes">The permission types to add</param>
-        public void AddPermission(Entity target, SecurityGroup securityGroup, PermissionTypes permissionTypes) => AddPermission(target.Guid, securityGroup, permissionTypes);
+        public void AddPermission(Entity target, SecurityGroup securityGroup, PermissionTypes permissionTypes)
+        {
+            this.AddPermission(target.Guid, securityGroup, permissionTypes);
+        }
 
         /// <summary>
         /// Adds the specified permissions to the Entity
@@ -91,7 +100,7 @@ namespace Penguin.Cms.Security.Repositories
             bool foundPermissions;
             if (existing is null)
             {
-                foundPermissions = PermissionsCache.TryGetValue(target, out existing);
+                foundPermissions = this.PermissionsCache.TryGetValue(target, out existing);
             }
             else
             {
@@ -129,7 +138,7 @@ namespace Penguin.Cms.Security.Repositories
 
             foreach (EntityPermissions e in o)
             {
-                Add(e);
+                this.Add(e);
             }
         }
 
@@ -161,14 +170,20 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="user">The user doing the accessing</param>
         /// <param name="permissionTypes">The permission types needed to perform the action</param>
         /// <returns>True if the user is allowed to continue</returns>
-        public bool AllowsAccessType(Entity target, IUser user, PermissionTypes permissionTypes) => this.AllowsAccessType(target.Guid, user, permissionTypes);
+        public bool AllowsAccessType(Entity target, IUser user, PermissionTypes permissionTypes)
+        {
+            return this.AllowsAccessType(target.Guid, user, permissionTypes);
+        }
 
         /// <summary>
         /// Retrieves the permissions for a single entity
         /// </summary>
         /// <param name="target">The target entity to retrieve permissions for</param>
         /// <returns>The permissions applicable to the entity</returns>
-        public EntityPermissions GetForEntity(Entity target) => GetForEntity(target.Guid);
+        public EntityPermissions GetForEntity(Entity target)
+        {
+            return this.GetForEntity(target.Guid);
+        }
 
         /// <summary>
         /// Retrieves the permissions for a single entity
@@ -185,7 +200,6 @@ namespace Penguin.Cms.Security.Repositories
             }
 
             EntityPermissions toReturn = existing.FirstOrDefault();
-
 
             //This is really fucking stupid but theres no time to fix it now
             if (existing.Count > 1)
@@ -254,7 +268,7 @@ namespace Penguin.Cms.Security.Repositories
 
             foreach (EntityPermissions e in o)
             {
-                Update(e);
+                this.Update(e);
             }
         }
     }

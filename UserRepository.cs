@@ -160,7 +160,10 @@ namespace Penguin.Cms.Security.Repositories
         /// </summary>
         /// <param name="email">The email to check for</param>
         /// <returns>A user with a matching email, or null if none</returns>
-        public User GetByEmail(string email) => this.FirstOrDefault(u => u.Email == email);
+        public User GetByEmail(string email)
+        {
+            return this.FirstOrDefault(u => u.Email == email);
+        }
 
         /// <summary>
         /// Gets a user with a matching login
@@ -213,7 +216,7 @@ namespace Penguin.Cms.Security.Repositories
         {
             foreach (User entity in o)
             {
-                AddDefaults(entity);
+                this.AddDefaults(entity);
             }
         }
 
