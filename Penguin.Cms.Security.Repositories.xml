@@ -82,7 +82,7 @@
             A repository for accessing entity permissions
             </summary>
         </member>
-        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{Penguin.Cms.Security.EntityPermissions},Penguin.Messaging.Core.MessageBus)">
+        <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.#ctor(Penguin.Persistence.Abstractions.Interfaces.IPersistenceContext{Penguin.Cms.Security.EntityPermissions},Penguin.Cms.Repositories.Interfaces.IEntityRepository{Penguin.Cms.Security.SecurityGroup},Penguin.Messaging.Core.MessageBus)">
             <summary>
             Constructs this repository using the given values
             </summary>

@@ -1,5 +1,6 @@
 ﻿using Penguin.Cms.Entities;
 using Penguin.Cms.Repositories;
+using Penguin.Cms.Repositories.Interfaces;
 using Penguin.Messaging.Core;
 using Penguin.Persistence.Abstractions.Interfaces;
 using Penguin.Security.Abstractions;
@@ -18,14 +19,16 @@ namespace Penguin.Cms.Security.Repositories
     public class EntityPermissionsRepository : EntityRepository<EntityPermissions>
     {
         private readonly Dictionary<Guid, EntityPermissions> PermissionsCache = new Dictionary<Guid, EntityPermissions>();
+        protected IEntityRepository<SecurityGroup> SecurityGroupRepository { get; set; }
 
         /// <summary>
         /// Constructs this repository using the given values
         /// </summary>
         /// <param name="context">The underlying context to use for persistence</param>
         /// <param name="messageBus">An optional message bus for event notification</param>
-        public EntityPermissionsRepository(IPersistenceContext<EntityPermissions> context, MessageBus messageBus = null) : base(context, messageBus)
+        public EntityPermissionsRepository(IPersistenceContext<EntityPermissions> context, IEntityRepository<SecurityGroup> securityGroupRepository, MessageBus messageBus = null) : base(context, messageBus)
         {
+            SecurityGroupRepository = securityGroupRepository;
         }
 
         /// <summary>
@@ -96,6 +99,13 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="permissionTypes">The permission types to add</param>
         public void AddPermission(Guid target, SecurityGroup securityGroup, PermissionTypes permissionTypes)
         {
+            if (securityGroup is null)
+            {
+                throw new ArgumentNullException(nameof(securityGroup));
+            }
+
+            securityGroup = SecurityGroupRepository.Find(securityGroup.Guid);
+
             EntityPermissions existing = this.GetForEntity(target);
             bool foundPermissions;
             if (existing is null)
