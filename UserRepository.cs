@@ -32,7 +32,7 @@ namespace Penguin.Cms.Security.Repositories
         /// <summary>
         /// Constructs a new instance of this repository
         /// </summary>
-        /// <param name="context">An IPersistence context implemementation for Users</param>
+        /// <param name="context">An IPersistence context implementation for Users</param>
         /// <param name="roleRepository">A role repository for getting default roles</param>
         /// <param name="groupRepository">A group repository for getting default groups</param>
         /// <param name="messageBus">An optional message bus for persistence messages</param>
@@ -48,7 +48,10 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="createMessage">Persistence message containing the user being created</param>
         public void AcceptMessage(Creating<User> createMessage)
         {
-            Contract.Requires(createMessage != null);
+            if (createMessage is null)
+            {
+                throw new ArgumentNullException(nameof(createMessage));
+            }
 
             foreach (Role thisRole in this.RoleRepository.GetDefaults())
             {
@@ -69,6 +72,11 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="o">Users to add</param>
         public override void Add(User o)
         {
+            if (o is null)
+            {
+                throw new ArgumentNullException(nameof(o));
+            }
+
             this.AddDefaults(o);
             base.Add(o);
         }
@@ -79,6 +87,11 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="o">Users to add</param>
         public override void AddOrUpdate(User o)
         {
+            if (o is null)
+            {
+                throw new ArgumentNullException(nameof(o));
+            }
+
             this.AddDefaults(o);
             base.AddOrUpdate(o);
         }
@@ -193,6 +206,11 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="o">User to update</param>
         public override void Update(User o)
         {
+            if (o is null)
+            {
+                throw new ArgumentNullException(nameof(o));
+            }
+
             this.AddDefaults(o);
             base.Update(o);
         }

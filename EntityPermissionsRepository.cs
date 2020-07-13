@@ -88,6 +88,11 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="permissionTypes">The permission types to add</param>
         public void AddPermission(Entity target, SecurityGroup securityGroup, PermissionTypes permissionTypes)
         {
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             this.AddPermission(target.Guid, securityGroup, permissionTypes);
         }
 
@@ -182,6 +187,11 @@ namespace Penguin.Cms.Security.Repositories
         /// <returns>True if the user is allowed to continue</returns>
         public bool AllowsAccessType(Entity target, IUser user, PermissionTypes permissionTypes)
         {
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             return this.AllowsAccessType(target.Guid, user, permissionTypes);
         }
 
@@ -192,6 +202,11 @@ namespace Penguin.Cms.Security.Repositories
         /// <returns>The permissions applicable to the entity</returns>
         public EntityPermissions GetForEntity(Entity target)
         {
+            if (target is null)
+            {
+                throw new ArgumentNullException(nameof(target));
+            }
+
             return this.GetForEntity(target.Guid);
         }
 
@@ -211,7 +226,7 @@ namespace Penguin.Cms.Security.Repositories
 
             EntityPermissions toReturn = existing.FirstOrDefault();
 
-            //This is really fucking stupid but theres no time to fix it now
+            //This is really fucking stupid but there's no time to fix it now
             if (existing.Count > 1)
             {
                 using (IWriteContext context = this.WriteContext())

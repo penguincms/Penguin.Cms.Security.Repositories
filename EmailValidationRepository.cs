@@ -42,15 +42,13 @@ namespace Penguin.Cms.Security.Repositories
         }
 
         /// <summary>
-        /// Generates a validation email and sents it to the user
+        /// Generates a validation email and sends it to the user
         /// </summary>
         /// <param name="user">The user to validate</param>
         /// <param name="linkUrl">Passed in value not sent. Only used for templating</param>
         [EmailHandler("Validate Email")]
         public void GenerateEmail(User user, string linkUrl)
         {
-            Contract.Requires(linkUrl != null);
-
             this.EmailTemplateRepository.GenerateEmailFromTemplate(new Dictionary<string, object>()
             {
                 [nameof(user)] = user,
@@ -65,7 +63,10 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="LinkUrl">Passed in value not sent. Only used for templating</param>
         public void GenerateToken(User u, string LinkUrl)
         {
-            Contract.Requires(u != null);
+            if (u is null)
+            {
+                throw new ArgumentNullException(nameof(u));
+            }
 
             this.GenerateToken(u.Guid, LinkUrl);
         }
@@ -77,8 +78,6 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="LinkUrl">Passed in value not sent. Only used for templating</param>
         public void GenerateToken(Guid userGuid, string LinkUrl)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(LinkUrl));
-
             User thisUser = this.UserRepository.Find(userGuid);
 
             List<EmailValidationToken> existingTokens = this.Where(t => t.Creator == userGuid).ToList();
@@ -115,7 +114,10 @@ namespace Penguin.Cms.Security.Repositories
         /// <returns>True if the user has validated their email</returns>
         public bool IsValidated(User u)
         {
-            Contract.Requires(u != null);
+            if (u is null)
+            {
+                throw new ArgumentNullException(nameof(u));
+            }
 
             return this.IsValidated(u.Guid);
         }
