@@ -30,7 +30,7 @@
         </member>
         <member name="M:Penguin.Cms.Security.Repositories.EmailValidationRepository.GenerateEmail(Penguin.Cms.Security.User,System.String)">
             <summary>
-            Generates a validation email and sents it to the user
+            Generates a validation email and sends it to the user
             </summary>
             <param name="user">The user to validate</param>
             <param name="linkUrl">Passed in value not sent. Only used for templating</param>
@@ -192,7 +192,7 @@
             <summary>
             Constructs a new instance of this repository
             </summary>
-            <param name="context">An IPersistence context implemementation for Users</param>
+            <param name="context">An IPersistence context implementation for Users</param>
             <param name="roleRepository">A role repository for getting default roles</param>
             <param name="groupRepository">A group repository for getting default groups</param>
             <param name="messageBus">An optional message bus for persistence messages</param>
