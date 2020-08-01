@@ -12,8 +12,8 @@
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove=".gitmodules" />
-    <PackageReference Include="Penguin.Cms.Repositories" Version="5.0.1-T9ZCSSJ" />
-    <PackageReference Include="Penguin.Cms.Security" Version="5.0.1-T9ZCSSJ" />
+    <PackageReference Include="Penguin.Cms.Repositories" Version="5.0.1-T9ZTQVZ" />
+    <PackageReference Include="Penguin.Cms.Security" Version="5.0.1-T9ZTQVZ" />
   </ItemGroup>
   <ItemGroup />
 </Project>
