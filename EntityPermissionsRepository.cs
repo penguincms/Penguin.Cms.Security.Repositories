@@ -15,7 +15,6 @@ namespace Penguin.Cms.Security.Repositories
     /// <summary>
     /// A repository for accessing entity permissions
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix", Justification = "<Pending>")]
     public class EntityPermissionsRepository : EntityRepository<EntityPermissions>
     {
         private readonly Dictionary<Guid, EntityPermissions> PermissionsCache = new Dictionary<Guid, EntityPermissions>();
@@ -28,7 +27,7 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="messageBus">An optional message bus for event notification</param>
         public EntityPermissionsRepository(IPersistenceContext<EntityPermissions> context, IEntityRepository<SecurityGroup> securityGroupRepository, MessageBus messageBus = null) : base(context, messageBus)
         {
-            SecurityGroupRepository = securityGroupRepository;
+            this.SecurityGroupRepository = securityGroupRepository;
         }
 
         /// <summary>
@@ -109,7 +108,7 @@ namespace Penguin.Cms.Security.Repositories
                 throw new ArgumentNullException(nameof(securityGroup));
             }
 
-            securityGroup = SecurityGroupRepository.Find(securityGroup.Guid);
+            securityGroup = this.SecurityGroupRepository.Find(securityGroup.Guid);
 
             EntityPermissions existing = this.GetForEntity(target);
             bool foundPermissions;
