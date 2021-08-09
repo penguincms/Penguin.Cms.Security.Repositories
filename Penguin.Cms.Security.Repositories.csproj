@@ -13,7 +13,7 @@
     <None Remove=".gitignore" />
     <None Remove=".gitmodules" />
     <PackageReference Include="Penguin.Cms.Security" Version="5.0.6-TAHULSY" />
-    <PackageReference Include="Penguin.Cms.Repositories" Version="5.0.6-TAHULSY" />
+    <PackageReference Include="Penguin.Cms.Repositories" Version="5.0.6-TAJHTXV" />
   </ItemGroup>
   <ItemGroup />
 </Project>
