@@ -65,19 +65,13 @@ namespace Penguin.Cms.Security.Repositories
         /// Updates any existing entity permissions or adds if they're new
         /// </summary>
         /// <param name="o">The updated entity permissions</param>
-        public override void AddOrUpdate(EntityPermissions o)
-        {
-            this.Update(o);
-        }
+        public override void AddOrUpdate(EntityPermissions o) => this.Update(o);
 
         /// <summary>
         /// Updates any existing entity permissions or adds if they're new
         /// </summary>
         /// <param name="o">The updated entity permissions</param>
-        public override void AddOrUpdateRange(IEnumerable<EntityPermissions> o)
-        {
-            this.UpdateRange(o);
-        }
+        public override void AddOrUpdateRange(IEnumerable<EntityPermissions> o) => this.UpdateRange(o);
 
         /// <summary>
         /// Adds the specified permissions to the Entity
