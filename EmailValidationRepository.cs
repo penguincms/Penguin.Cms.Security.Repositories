@@ -101,7 +101,10 @@ namespace Penguin.Cms.Security.Repositories
         /// </summary>
         /// <param name="TokenId">The token to check for</param>
         /// <returns>True if there is a valid, unexpired token</returns>
-        public bool IsTokenExpired(Guid TokenId) => this.Where(t => t.Guid == TokenId).FirstOrDefault()?.IsDeleted ?? true;
+        public bool IsTokenExpired(Guid TokenId)
+        {
+            return this.Where(t => t.Guid == TokenId).FirstOrDefault()?.IsDeleted ?? true;
+        }
 
         /// <summary>
         /// Returns true if the user has validated their email
@@ -123,7 +126,10 @@ namespace Penguin.Cms.Security.Repositories
         /// </summary>
         /// <param name="userGuid">The user to check for</param>
         /// <returns>True if the user has validated their email</returns>
-        public bool IsValidated(Guid userGuid) => this.Where(t => t.IsValidated && t.Creator == userGuid).Any();
+        public bool IsValidated(Guid userGuid)
+        {
+            return this.Where(t => t.IsValidated && t.Creator == userGuid).Any();
+        }
 
         /// <summary>
         /// Checks to see if the token if the Token is valid

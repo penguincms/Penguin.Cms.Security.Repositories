@@ -1,7 +1,7 @@
 ﻿using Penguin.Cms.Repositories;
 using Penguin.Cms.Security.Constants;
 using Penguin.Cms.Security.Extensions;
-using Penguin.Extensions.Strings.Security;
+using Penguin.Extensions.String.Security;
 using Penguin.Messaging.Abstractions.Interfaces;
 using Penguin.Messaging.Core;
 using Penguin.Messaging.Persistence.Messages;
@@ -143,7 +143,7 @@ namespace Penguin.Cms.Security.Repositories
 
                     if (DBRole != null)
                     {
-                        toReturn.Roles.Remove(thisRole);
+                        _ = toReturn.Roles.Remove(thisRole);
                         toReturn.Roles.Add(DBRole);
                     }
                 }
@@ -154,7 +154,7 @@ namespace Penguin.Cms.Security.Repositories
 
                     if (DBGroup != null)
                     {
-                        toReturn.Groups.Remove(thisGroup);
+                        _ = toReturn.Groups.Remove(thisGroup);
                         toReturn.Groups.Add(DBGroup);
                     }
                 }
@@ -172,14 +172,20 @@ namespace Penguin.Cms.Security.Repositories
         /// </summary>
         /// <param name="email">The email to check for</param>
         /// <returns>A user with a matching email, or null if none</returns>
-        public User GetByEmail(string email) => this.FirstOrDefault(u => u.Email == email);
+        public User GetByEmail(string email)
+        {
+            return this.FirstOrDefault(u => u.Email == email);
+        }
 
         /// <summary>
         /// Gets a user with a matching login
         /// </summary>
         /// <param name="login">The login to get</param>
         /// <returns>A user with a  matching login, or null if none</returns>
-        public User GetByLogin(string login) => this.FirstOrDefault(u => u.ExternalId == login);
+        public User GetByLogin(string login)
+        {
+            return this.FirstOrDefault(u => u.ExternalId == login);
+        }
 
         /// <summary>
         /// Gets a user matching the supplied username and password
