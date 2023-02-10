@@ -36,8 +36,8 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="messageBus">An optional message bus for sending persistence messages</param>
         public EmailValidationRepository(IPersistenceContext<EmailValidationToken> context, ISendTemplates emailTemplateRepository, IEntityRepository<User> userRepository, MessageBus messageBus = null) : base(context, messageBus)
         {
-            this.EmailTemplateRepository = emailTemplateRepository;
-            this.UserRepository = userRepository;
+            EmailTemplateRepository = emailTemplateRepository;
+            UserRepository = userRepository;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Penguin.Cms.Security.Repositories
         [EmailHandler("Validate Email")]
         public void GenerateEmail(User user, string linkUrl)
         {
-            this.EmailTemplateRepository.GenerateEmailFromTemplate(new Dictionary<string, object>()
+            EmailTemplateRepository.GenerateEmailFromTemplate(new Dictionary<string, object>()
             {
                 [nameof(user)] = user,
                 [nameof(linkUrl)] = linkUrl
@@ -67,7 +67,7 @@ namespace Penguin.Cms.Security.Repositories
                 throw new ArgumentNullException(nameof(u));
             }
 
-            this.GenerateToken(u.Guid, LinkUrl);
+            GenerateToken(u.Guid, LinkUrl);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="LinkUrl">Passed in value not sent. Only used for templating</param>
         public void GenerateToken(Guid userGuid, string LinkUrl)
         {
-            User thisUser = this.UserRepository.Find(userGuid);
+            User thisUser = UserRepository.Find(userGuid);
 
             List<EmailValidationToken> existingTokens = this.Where(t => t.Creator == userGuid).ToList();
 
@@ -86,14 +86,14 @@ namespace Penguin.Cms.Security.Repositories
                 thisToken.DateDeleted = DateTime.Now;
             }
 
-            EmailValidationToken newToken = new EmailValidationToken()
+            EmailValidationToken newToken = new()
             {
                 Creator = userGuid
             };
 
-            this.GenerateEmail(thisUser, string.Format(CultureInfo.CurrentCulture, LinkUrl, newToken.Guid));
+            GenerateEmail(thisUser, string.Format(CultureInfo.CurrentCulture, LinkUrl, newToken.Guid));
 
-            this.Add(newToken);
+            Add(newToken);
         }
 
         /// <summary>
@@ -113,12 +113,7 @@ namespace Penguin.Cms.Security.Repositories
         /// <returns>True if the user has validated their email</returns>
         public bool IsValidated(User u)
         {
-            if (u is null)
-            {
-                throw new ArgumentNullException(nameof(u));
-            }
-
-            return this.IsValidated(u.Guid);
+            return u is null ? throw new ArgumentNullException(nameof(u)) : IsValidated(u.Guid);
         }
 
         /// <summary>
@@ -138,7 +133,7 @@ namespace Penguin.Cms.Security.Repositories
         /// <returns>If the token is found, and valid</returns>
         public bool ValidateToken(Guid TokenId)
         {
-            EmailValidationToken thisToken = this.Find(TokenId);
+            EmailValidationToken thisToken = Find(TokenId);
 
             if (thisToken is null)
             {

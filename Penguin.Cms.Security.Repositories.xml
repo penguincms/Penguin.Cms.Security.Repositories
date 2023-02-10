@@ -87,6 +87,7 @@
             Constructs this repository using the given values
             </summary>
             <param name="context">The underlying context to use for persistence</param>
+            <param name="securityGroupRepository"></param>
             <param name="messageBus">An optional message bus for event notification</param>
         </member>
         <member name="M:Penguin.Cms.Security.Repositories.EntityPermissionsRepository.Add(Penguin.Cms.Security.EntityPermissions)">
@@ -201,7 +202,7 @@
             <summary>
             Message handler for creating a user, user to ensure that all defaults are properly assigned
             </summary>
-            <param name="createMessage">Persistence message containing the user being created</param>
+            <param name="message">Persistence message containing the user being created</param>
         </member>
         <member name="M:Penguin.Cms.Security.Repositories.UserRepository.Add(Penguin.Cms.Security.User)">
             <summary>
@@ -231,7 +232,7 @@
             <summary>
             Gets a user by ID, or returns a Guest user instance if the Id is 0 or doesn't exist
             </summary>
-            <param name="userId">The user to get</param>
+            <param name="Id">The user to get</param>
             <returns> a user by ID, or returns a Guest user instance if the Id is 0 or doesn't exist</returns>
         </member>
         <member name="M:Penguin.Cms.Security.Repositories.UserRepository.GetByEmail(System.String)">

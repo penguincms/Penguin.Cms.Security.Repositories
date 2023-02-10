@@ -37,32 +37,32 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="messageBus">An optional message bus for persistence messages</param>
         public UserRepository(IPersistenceContext<User> context, IRepository<Role> roleRepository, IRepository<Group> groupRepository, MessageBus messageBus = null) : base(context, messageBus)
         {
-            this.RoleRepository = roleRepository;
-            this.GroupRepository = groupRepository;
+            RoleRepository = roleRepository;
+            GroupRepository = groupRepository;
         }
 
         /// <summary>
         /// Message handler for creating a user, user to ensure that all defaults are properly assigned
         /// </summary>
-        /// <param name="createMessage">Persistence message containing the user being created</param>
-        public void AcceptMessage(Creating<User> createMessage)
+        /// <param name="message">Persistence message containing the user being created</param>
+        public void AcceptMessage(Creating<User> message)
         {
-            if (createMessage is null)
+            if (message is null)
             {
-                throw new ArgumentNullException(nameof(createMessage));
+                throw new ArgumentNullException(nameof(message));
             }
 
-            foreach (Role thisRole in this.RoleRepository.GetDefaults())
+            foreach (Role thisRole in RoleRepository.GetDefaults())
             {
-                createMessage.Target.Roles.Add(thisRole);
+                message.Target.Roles.Add(thisRole);
             }
 
-            foreach (Group thisGroup in this.GroupRepository.GetDefaults())
+            foreach (Group thisGroup in GroupRepository.GetDefaults())
             {
-                createMessage.Target.Groups.Add(thisGroup);
+                message.Target.Groups.Add(thisGroup);
             }
 
-            createMessage.Target.Enabled = true;
+            message.Target.Enabled = true;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Penguin.Cms.Security.Repositories
                 throw new ArgumentNullException(nameof(o));
             }
 
-            this.AddDefaults(o);
+            AddDefaults(o);
             base.Add(o);
         }
 
@@ -91,7 +91,7 @@ namespace Penguin.Cms.Security.Repositories
                 throw new ArgumentNullException(nameof(o));
             }
 
-            this.AddDefaults(o);
+            AddDefaults(o);
             base.AddOrUpdate(o);
         }
 
@@ -106,7 +106,7 @@ namespace Penguin.Cms.Security.Repositories
                 throw new System.ArgumentNullException(nameof(o));
             }
 
-            this.AddDefaults(o);
+            AddDefaults(o);
             base.AddOrUpdateRange(o);
         }
 
@@ -121,25 +121,25 @@ namespace Penguin.Cms.Security.Repositories
                 throw new System.ArgumentNullException(nameof(o));
             }
 
-            this.AddDefaults(o);
+            AddDefaults(o);
             base.AddRange(o);
         }
 
         /// <summary>
         /// Gets a user by ID, or returns a Guest user instance if the Id is 0 or doesn't exist
         /// </summary>
-        /// <param name="userId">The user to get</param>
+        /// <param name="Id">The user to get</param>
         /// <returns> a user by ID, or returns a Guest user instance if the Id is 0 or doesn't exist</returns>
-        public override User Find(int userId)
+        public override User Find(int Id)
         {
-            if (userId == 0 || !this.Where(u => u._Id == userId).Any())
+            if (Id == 0 || !this.Where(u => u._Id == Id).Any())
             {
                 //This is dumb. For guest users we have to make sure the Guid matches the DB role guid, so we have to pull it
                 User toReturn = Users.Guest;
 
                 foreach (Role thisRole in toReturn.Roles.ToList())
                 {
-                    Role DBRole = this.RoleRepository.GetByName(thisRole.Name);
+                    Role DBRole = RoleRepository.GetByName(thisRole.Name);
 
                     if (DBRole != null)
                     {
@@ -150,7 +150,7 @@ namespace Penguin.Cms.Security.Repositories
 
                 foreach (Group thisGroup in toReturn.Groups.ToList())
                 {
-                    Group DBGroup = this.GroupRepository.GetByName(thisGroup.Name);
+                    Group DBGroup = GroupRepository.GetByName(thisGroup.Name);
 
                     if (DBGroup != null)
                     {
@@ -163,7 +163,7 @@ namespace Penguin.Cms.Security.Repositories
             }
             else
             {
-                return this.Where(u => u._Id == userId).FirstOrDefault();
+                return this.Where(u => u._Id == Id).FirstOrDefault();
             }
         }
 
@@ -210,7 +210,7 @@ namespace Penguin.Cms.Security.Repositories
                 throw new ArgumentNullException(nameof(o));
             }
 
-            this.AddDefaults(o);
+            AddDefaults(o);
             base.Update(o);
         }
 
@@ -225,7 +225,7 @@ namespace Penguin.Cms.Security.Repositories
                 throw new System.ArgumentNullException(nameof(o));
             }
 
-            this.AddDefaults(o);
+            AddDefaults(o);
             base.UpdateRange(o);
         }
 
@@ -233,7 +233,7 @@ namespace Penguin.Cms.Security.Repositories
         {
             foreach (User entity in o)
             {
-                this.AddDefaults(entity);
+                AddDefaults(entity);
             }
         }
 
@@ -241,7 +241,7 @@ namespace Penguin.Cms.Security.Repositories
         {
             if (entity.ExternalId != Users.Guest.ExternalId && !entity.HasRole(Roles.LoggedIn))
             {
-                Role LoggedIn = this.RoleRepository.GetByName(Roles.LoggedIn.Name);
+                Role LoggedIn = RoleRepository.GetByName(Roles.LoggedIn.Name);
 
                 if (LoggedIn is null)
                 {

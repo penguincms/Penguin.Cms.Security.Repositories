@@ -17,17 +17,18 @@ namespace Penguin.Cms.Security.Repositories
     /// </summary>
     public class EntityPermissionsRepository : EntityRepository<EntityPermissions>
     {
-        private readonly Dictionary<Guid, EntityPermissions> PermissionsCache = new Dictionary<Guid, EntityPermissions>();
+        private readonly Dictionary<Guid, EntityPermissions> PermissionsCache = new();
         protected IEntityRepository<SecurityGroup> SecurityGroupRepository { get; set; }
 
         /// <summary>
         /// Constructs this repository using the given values
         /// </summary>
         /// <param name="context">The underlying context to use for persistence</param>
+        /// <param name="securityGroupRepository"></param>
         /// <param name="messageBus">An optional message bus for event notification</param>
         public EntityPermissionsRepository(IPersistenceContext<EntityPermissions> context, IEntityRepository<SecurityGroup> securityGroupRepository, MessageBus messageBus = null) : base(context, messageBus)
         {
-            this.SecurityGroupRepository = securityGroupRepository;
+            SecurityGroupRepository = securityGroupRepository;
         }
 
         /// <summary>
@@ -46,17 +47,17 @@ namespace Penguin.Cms.Security.Repositories
                 throw new Exception("Can not add permissions with empty guid");
             }
 
-            EntityPermissions existing = this.GetForEntity(o.EntityGuid);
+            EntityPermissions existing = GetForEntity(o.EntityGuid);
 
             if (existing is null)
             {
-                base.Add(this.ShallowClone(o));
+                base.Add(ShallowClone(o));
             }
             else
             {
                 foreach (SecurityGroupPermission sg in o.Permissions)
                 {
-                    this.AddPermission(o.EntityGuid, sg.SecurityGroup, sg.Type);
+                    AddPermission(o.EntityGuid, sg.SecurityGroup, sg.Type);
                 }
             }
         }
@@ -67,7 +68,7 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="o">The updated entity permissions</param>
         public override void AddOrUpdate(EntityPermissions o)
         {
-            this.Update(o);
+            Update(o);
         }
 
         /// <summary>
@@ -76,7 +77,7 @@ namespace Penguin.Cms.Security.Repositories
         /// <param name="o">The updated entity permissions</param>
         public override void AddOrUpdateRange(IEnumerable<EntityPermissions> o)
         {
-            this.UpdateRange(o);
+            UpdateRange(o);
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace Penguin.Cms.Security.Repositories
                 throw new ArgumentNullException(nameof(target));
             }
 
-            this.AddPermission(target.Guid, securityGroup, permissionTypes);
+            AddPermission(target.Guid, securityGroup, permissionTypes);
         }
 
         /// <summary>
@@ -108,19 +109,10 @@ namespace Penguin.Cms.Security.Repositories
                 throw new ArgumentNullException(nameof(securityGroup));
             }
 
-            securityGroup = this.SecurityGroupRepository.Find(securityGroup.Guid);
+            securityGroup = SecurityGroupRepository.Find(securityGroup.Guid);
 
-            EntityPermissions existing = this.GetForEntity(target);
-            bool foundPermissions;
-            if (existing is null)
-            {
-                foundPermissions = this.PermissionsCache.TryGetValue(target, out existing);
-            }
-            else
-            {
-                foundPermissions = true;
-            }
-
+            EntityPermissions existing = GetForEntity(target);
+            bool foundPermissions = existing is not null || PermissionsCache.TryGetValue(target, out existing);
             if (!foundPermissions)
             {
                 existing = new EntityPermissions()
@@ -129,7 +121,7 @@ namespace Penguin.Cms.Security.Repositories
                 };
 
                 existing.AddPermission(securityGroup, permissionTypes);
-                this.PermissionsCache.Add(target, existing);
+                PermissionsCache.Add(target, existing);
                 base.Add(existing);
             }
             else
@@ -152,7 +144,7 @@ namespace Penguin.Cms.Security.Repositories
 
             foreach (EntityPermissions e in o)
             {
-                this.Add(e);
+                Add(e);
             }
         }
 
@@ -165,16 +157,9 @@ namespace Penguin.Cms.Security.Repositories
         /// <returns>True if the user is allowed to continue</returns>
         public bool AllowsAccessType(Guid target, IUser user, PermissionTypes permissionTypes)
         {
-            EntityPermissions existing = this.GetForEntity(target);
+            EntityPermissions existing = GetForEntity(target);
 
-            if (existing != null)
-            {
-                return existing.AllowsAccessType(user, permissionTypes);
-            }
-            else
-            {
-                return false;
-            }
+            return existing != null && existing.AllowsAccessType(user, permissionTypes);
         }
 
         /// <summary>
@@ -186,12 +171,7 @@ namespace Penguin.Cms.Security.Repositories
         /// <returns>True if the user is allowed to continue</returns>
         public bool AllowsAccessType(Entity target, IUser user, PermissionTypes permissionTypes)
         {
-            if (target is null)
-            {
-                throw new ArgumentNullException(nameof(target));
-            }
-
-            return this.AllowsAccessType(target.Guid, user, permissionTypes);
+            return target is null ? throw new ArgumentNullException(nameof(target)) : AllowsAccessType(target.Guid, user, permissionTypes);
         }
 
         /// <summary>
@@ -201,12 +181,7 @@ namespace Penguin.Cms.Security.Repositories
         /// <returns>The permissions applicable to the entity</returns>
         public EntityPermissions GetForEntity(Entity target)
         {
-            if (target is null)
-            {
-                throw new ArgumentNullException(nameof(target));
-            }
-
-            return this.GetForEntity(target.Guid);
+            return target is null ? throw new ArgumentNullException(nameof(target)) : GetForEntity(target.Guid);
         }
 
         /// <summary>
@@ -228,23 +203,21 @@ namespace Penguin.Cms.Security.Repositories
             //This is really fucking stupid but there's no time to fix it now
             if (existing.Count > 1)
             {
-                using (IWriteContext context = this.WriteContext())
+                using IWriteContext context = WriteContext();
+                foreach (EntityPermissions EntityPermissions in existing.Skip(1))
                 {
-                    foreach (EntityPermissions EntityPermissions in existing.Skip(1))
+                    EntityPermissions entityPermissions = Find(EntityPermissions._Id);
+
+                    List<SecurityGroupPermission> toMove = entityPermissions.Permissions.ToList();
+
+                    entityPermissions.Permissions.Clear();
+
+                    foreach (SecurityGroupPermission sg in toMove)
                     {
-                        EntityPermissions entityPermissions = this.Find(EntityPermissions._Id);
-
-                        List<SecurityGroupPermission> toMove = entityPermissions.Permissions.ToList();
-
-                        entityPermissions.Permissions.Clear();
-
-                        foreach (SecurityGroupPermission sg in toMove)
-                        {
-                            toReturn.AddPermission(sg.SecurityGroup, sg.Type);
-                        }
-
-                        this.Delete(entityPermissions);
+                        toReturn.AddPermission(sg.SecurityGroup, sg.Type);
                     }
+
+                    Delete(entityPermissions);
                 }
             }
 
@@ -267,11 +240,11 @@ namespace Penguin.Cms.Security.Repositories
                 throw new Exception("Can not update permissions with empty guid");
             }
 
-            EntityPermissions existing = this.GetForEntity(o.EntityGuid);
+            EntityPermissions existing = GetForEntity(o.EntityGuid);
 
             if (existing is null)
             {
-                base.Add(this.ShallowClone(o));
+                base.Add(ShallowClone(o));
             }
             else
             {
@@ -292,7 +265,7 @@ namespace Penguin.Cms.Security.Repositories
 
             foreach (EntityPermissions e in o)
             {
-                this.Update(e);
+                Update(e);
             }
         }
     }
