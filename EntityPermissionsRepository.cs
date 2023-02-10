@@ -18,6 +18,7 @@ namespace Penguin.Cms.Security.Repositories
     public class EntityPermissionsRepository : EntityRepository<EntityPermissions>
     {
         private readonly Dictionary<Guid, EntityPermissions> PermissionsCache = new();
+
         protected IEntityRepository<SecurityGroup> SecurityGroupRepository { get; set; }
 
         /// <summary>
