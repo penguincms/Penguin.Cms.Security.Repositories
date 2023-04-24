@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="Penguin.Projects.Shared\Penguin.Projects.Shared.csproj" />
   <PropertyGroup>
-    <PackageProjectUrl>https://github.com/PenguinCms/Penguin.Cms.Security.Repositories</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/PenguinCMS/Penguin.Cms.Security.Repositories</PackageProjectUrl>
     <Version>5.0.5</Version>
     <Description>None Available</Description>
     <TargetFrameworks>netstandard2.1;net7.0</TargetFrameworks>
@@ -13,8 +13,8 @@
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove=".gitmodules" />
-    <PackageReference Include="Penguin.Cms.Security" Version="5.4.0" />
-    <PackageReference Include="Penguin.Cms.Repositories" Version="5.4.0" />
+    <PackageReference Include="Penguin.Cms.Security" Version="5.7.0" />
+    <PackageReference Include="Penguin.Cms.Repositories" Version="5.7.0" />
   </ItemGroup>
   <ItemGroup />
 </Project>
